@@ -8,23 +8,27 @@
 </template>
 
 <script>
+import { computed } from 'vue';
+
 export default {
-  emits: ["delete-user"],
-  computed: {
-    fullName() {
-      return `${this.firstName} ${this.lastName}`;
-    },
-  },
   props: {
     id: { type: Number, required: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     age: { type: Number, required: true },
   },
-  methods: {
-    removeUser() {
-      this.$emit("delete-user", this.id);
-    },
+  emits: ["delete-user"],
+  setup(props, context) {
+    const fullName = computed(() => `${props.firstName} ${props.lastName}`);
+
+    function removeUser() {
+      context.emit("delete-user", props.id);
+    }
+
+    return {
+      fullName,
+      removeUser,
+    };
   },
 };
 </script>
